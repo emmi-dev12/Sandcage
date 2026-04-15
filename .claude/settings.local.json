@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\": {\"hookEventName\": \"UserPromptSubmit\", \"additionalContext\": \"CAVEMAN MODE ACTIVE: Respond like caveman. Use minimum words. No fluff. Short sentences. Grunt if needed.\"}}'",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
