@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!--
+        IMPORTANT: com.apple.security.app-sandbox is intentionally absent.
+        Sandcage must NOT be App Sandbox'd — it needs to spawn arbitrary subprocesses
+        (sandbox-exec, log stream) and read system logs. App Store distribution is
+        therefore not possible. Distribute as a notarized Developer ID DMG.
+    -->
+
+    <!-- Hardened Runtime is enabled for notarization (required for Gatekeeper). -->
+    <!-- No special runtime exceptions are needed for the core functionality.     -->
+
+</dict>
+</plist>

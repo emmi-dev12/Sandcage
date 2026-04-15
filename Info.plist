@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>com.sandcage.app</string>
+
+    <key>CFBundleName</key>
+    <string>Sandcage</string>
+
+    <key>CFBundleDisplayName</key>
+    <string>Sandcage</string>
+
+    <key>CFBundleVersion</key>
+    <string>1</string>
+
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+
+    <key>LSMinimumSystemVersion</key>
+    <string>13.0</string>
+
+    <key>NSHumanReadableCopyright</key>
+    <string>Run anything. Trust nothing.</string>
+
+    <!--
+        NSPrincipalClass is required for SwiftUI App lifecycle on macOS.
+    -->
+    <key>NSPrincipalClass</key>
+    <string>NSApplication</string>
+
+    <!--
+        NSSupportsAutomaticGraphicsSwitching allows the OS to choose the
+        right GPU — no special GPU entitlement needed.
+    -->
+    <key>NSSupportsAutomaticGraphicsSwitching</key>
+    <true/>
+
+    <!--
+        LSUIElement = false: Sandcage appears in the Dock when the window is open
+        and also shows a menu bar extra. Remove or set to true to make it
+        menu-bar-only (no Dock icon).
+    -->
+    <key>LSUIElement</key>
+    <false/>
+</dict>
+</plist>

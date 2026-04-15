@@ -1,0 +1,33 @@
+; Sandcage: Read Only Profile
+; Allows reading the filesystem and executing the app itself.
+; Denies all file writes, network access, and child process spawning.
+
+(version 1)
+
+(deny default)
+
+; Allow executing the app and forking (needed for some runtimes)
+(allow process-exec)
+(allow process-fork)
+(allow signal (target self))
+
+; Allow reading the entire filesystem
+(allow file-read*)
+(allow file-read-metadata)
+
+; Allow reading mach ports (needed for basic IPC and dyld)
+(allow mach-lookup)
+(allow mach-register)
+
+; Allow POSIX shared memory reads (some apps need this to load)
+(allow ipc-posix-shm-read*)
+
+; Allow sysctl reads (runtime needs system info)
+(allow sysctl-read)
+
+; Deny all writes — explicit for documentation clarity
+(deny file-write*)
+
+; Deny all network
+(deny network*)
+(deny system-socket)

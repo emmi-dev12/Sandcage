@@ -1,0 +1,31 @@
+; Sandcage: No Network Profile
+; Full filesystem and process access permitted.
+; All network operations (inbound and outbound) are denied.
+
+(version 1)
+
+(deny default)
+
+; Allow all file operations
+(allow file*)
+
+; Allow all process operations (exec, fork, signals)
+(allow process*)
+(allow signal)
+
+; Allow IPC and mach (local only — no network sockets)
+(allow ipc*)
+(allow mach*)
+
+; Allow sysctl
+(allow sysctl*)
+
+; Allow POSIX shared memory
+(allow ipc-posix*)
+
+; Allow file descriptor passing
+(allow iokit*)
+
+; Deny all network — BSD socket level and above
+(deny network*)
+(deny system-socket)

@@ -1,0 +1,62 @@
+; Sandcage: Full Lockdown Profile
+; Minimal permissions. The process gets:
+;   - Read access to its own bundle and system libraries
+;   - Read/write access to an isolated temporary directory
+;   - No network, no child processes, minimal IPC
+;
+; Parameters injected by ProcessLauncher via -D flags:
+;   APP_BUNDLE_PATH       - path to the .app bundle (or binary directory)
+;   APP_EXECUTABLE_PATH   - path to the actual Mach-O binary
+;   SANDBOX_TMP_DIR       - per-run isolated temp directory
+
+(version 1)
+
+(deny default)
+
+; Allow reading system libraries and frameworks (required to load and run at all)
+(allow file-read*
+    (subpath "/usr/lib")
+    (subpath "/usr/share")
+    (subpath "/System/Library/Frameworks")
+    (subpath "/System/Library/PrivateFrameworks")
+    (subpath "/System/Library/CoreServices")
+    (subpath "/Library/Frameworks")
+    (subpath "/private/var/db/timezone")
+    (subpath "/private/var/db/dyld")
+)
+
+; Allow reading the app's own bundle
+(allow file-read*
+    (subpath (param "APP_BUNDLE_PATH"))
+)
+
+; Allow read/write only inside the isolated temp directory
+(allow file-read* file-write*
+    (subpath (param "SANDBOX_TMP_DIR"))
+)
+
+; Allow executing the app binary itself (no other exec permitted)
+(allow process-exec
+    (literal (param "APP_EXECUTABLE_PATH"))
+)
+
+; Allow the process to signal itself (e.g. for crash handling)
+(allow signal (target self))
+
+; Minimal mach lookups needed for dyld and logging
+(allow mach-lookup
+    (global-name "com.apple.dyld")
+    (global-name "com.apple.logd")
+    (global-name "com.apple.lsd.mapdb")
+)
+
+; Allow sysctl reads (dyld and runtime need these)
+(allow sysctl-read)
+
+; Deny all network
+(deny network*)
+(deny system-socket)
+
+; Deny spawning child processes
+(deny process-exec*)
+(deny process-fork)
