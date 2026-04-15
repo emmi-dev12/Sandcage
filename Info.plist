@@ -21,7 +21,7 @@
     <string>13.0</string>
 
     <key>NSHumanReadableCopyright</key>
-    <string>Run anything. Trust nothing.</string>
+    <string>Inspect and constrain macOS app behavior in real time.</string>
 
     <!--
         NSPrincipalClass is required for SwiftUI App lifecycle on macOS.

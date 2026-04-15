@@ -1,4 +1,5 @@
 import SwiftUI
+import AppKit
 
 struct ViolationRowView: View {
     let event: ViolationEvent
@@ -61,5 +62,14 @@ struct ViolationRowView: View {
                 .monospacedDigit()
         }
         .padding(.vertical, 3)
+        .contextMenu {
+            Button {
+                let rule = SBPLGenerator.sbplRule(for: event)
+                NSPasteboard.general.clearContents()
+                NSPasteboard.general.setString(rule, forType: .string)
+            } label: {
+                Label("Copy SBPL Rule", systemImage: "doc.on.clipboard")
+            }
+        }
     }
 }

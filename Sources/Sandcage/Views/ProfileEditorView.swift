@@ -3,6 +3,8 @@ import AppKit
 
 /// View for creating a new profile or viewing/editing an existing one.
 /// Built-in profiles are displayed read-only with an option to duplicate.
+/// Pass `initialName`, `initialDescription`, `initialSBPL` to pre-seed a new profile
+/// (e.g. when auto-generating from observed violations).
 struct ProfileEditorView: View {
     @EnvironmentObject var appState: AppState
     @Environment(\.dismiss) private var dismiss
@@ -10,9 +12,24 @@ struct ProfileEditorView: View {
     /// nil = create new; non-nil = view/edit existing
     let profile: SandboxProfile?
 
+    /// Pre-seed values used only when `profile == nil` (new profile creation)
+    let initialName: String
+    let initialDescription: String
+    let initialSBPL: String
+
+    init(profile: SandboxProfile?,
+         initialName: String = "",
+         initialDescription: String = "",
+         initialSBPL: String = ProfileEditorView.defaultTemplate) {
+        self.profile = profile
+        self.initialName = initialName
+        self.initialDescription = initialDescription
+        self.initialSBPL = initialSBPL
+    }
+
     @State private var name: String = ""
     @State private var description: String = ""
-    @State private var sbplContent: String = defaultTemplate
+    @State private var sbplContent: String = ""
     @State private var validationResult: String? = nil
     @State private var isValidating = false
     @State private var showSaveError = false
@@ -47,7 +64,7 @@ struct ProfileEditorView: View {
             Divider()
 
             if isReadOnly {
-                Label("Built-in profiles cannot be edited. Duplicate to create a custom version.",
+                Label("Built-in presets cannot be edited. Duplicate to build a custom behavioral policy.",
                       systemImage: "lock.fill")
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -118,10 +135,15 @@ struct ProfileEditorView: View {
     // MARK: - Actions
 
     private func loadProfile() {
-        guard let profile else { return }
-        name = profile.name
-        description = profile.description
-        sbplContent = profile.sbplContent
+        if let profile {
+            name = profile.name
+            description = profile.description
+            sbplContent = profile.sbplContent
+        } else {
+            name = initialName
+            description = initialDescription
+            sbplContent = initialSBPL.isEmpty ? Self.defaultTemplate : initialSBPL
+        }
     }
 
     private func validateSBPL() {
@@ -182,8 +204,9 @@ struct ProfileEditorView: View {
     }
 
     private static let defaultTemplate = """
-    ; Custom Sandcage Profile
-    ; Reference: https://reverse.put.as/wp-content/uploads/2011/09/Apple-Sandbox-Guide-v1.0.pdf
+    ; Sandcage: Custom Behavioral Policy
+    ; Tip: run the app under a built-in preset first, observe violations,
+    ; then use "Build Profile" to auto-generate rules — and refine here.
 
     (version 1)
 
@@ -202,7 +225,7 @@ struct ProfileEditorView: View {
     (allow signal (target self))
     (allow sysctl-read)
 
-    ; Add your permissions below:
+    ; Add your rules below:
 
     """
 }
