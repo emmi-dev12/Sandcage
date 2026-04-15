@@ -49,8 +49,8 @@ You're not just watching a sandbox. You're building one.
 ### From source
 
 ```bash
-git clone https://github.com/emmi-dev12/fluffy-eureka.git
-cd fluffy-eureka
+git clone https://github.com/emmi-dev12/sandcage.git
+cd sandcage
 make install
 ```
 
