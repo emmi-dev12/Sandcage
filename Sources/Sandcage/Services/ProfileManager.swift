@@ -25,15 +25,15 @@ final class ProfileManager {
     private static let builtInMetadata: [(id: UUID, name: String, description: String, filename: String)] = [
         (SandboxProfile.readOnlyID,
          "Read Only",
-         "Reads filesystem freely. No writes, no network, no child processes.",
+         "Observe read behaviour. Blocks all writes, network, and child processes.",
          "read-only"),
         (SandboxProfile.noNetworkID,
          "No Network",
-         "Full filesystem and process access. All network traffic blocked.",
+         "Observe filesystem and process activity. All network access blocked.",
          "no-network"),
         (SandboxProfile.fullLockdownID,
          "Full Lockdown",
-         "Isolated temp directory only. No network, no child processes, minimal syscalls.",
+         "Strictest preset. Isolated temp dir only — observe what the app tries to escape.",
          "full-lockdown"),
     ]
 

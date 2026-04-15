@@ -13,7 +13,7 @@ struct RecentRunsView: View {
                     Text("No runs yet")
                         .font(.title3)
                         .foregroundStyle(.secondary)
-                    Text("Drop an app on the center panel to get started.")
+                    Text("Drop an app on the center panel to observe its behavior.")
                         .font(.caption)
                         .foregroundStyle(.tertiary)
                 }

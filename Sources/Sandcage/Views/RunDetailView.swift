@@ -7,6 +7,9 @@ struct RunDetailView: View {
     @State private var selectedTab = 0
     @State private var elapsedTime: TimeInterval = 0
     @State private var timer: Timer?
+    @State private var showingBuildProfile = false
+    @State private var builtProfileName = ""
+    @State private var builtProfileSBPL = ""
 
     private var run: SandboxedRun? {
         appState.runs.first { $0.id == runID }
@@ -21,6 +24,10 @@ struct RunDetailView: View {
         handle?.liveViolations ?? run?.violations ?? []
     }
 
+    private var denyViolations: [ViolationEvent] {
+        violations.filter { $0.action == .deny }
+    }
+
     var body: some View {
         Group {
             if let run {
@@ -33,6 +40,14 @@ struct RunDetailView: View {
                 .onAppear { startTimer(run: run) }
                 .onDisappear { stopTimer() }
                 .onChange(of: run.status) { _ in stopTimer() }
+                .sheet(isPresented: $showingBuildProfile) {
+                    ProfileEditorView(
+                        profile: nil,
+                        initialName: builtProfileName,
+                        initialDescription: "Auto-generated from observed violations. Review and tune before use.",
+                        initialSBPL: builtProfileSBPL
+                    )
+                }
             } else {
                 Text("Run not found")
                     .foregroundStyle(.secondary)
@@ -101,6 +116,10 @@ struct RunDetailView: View {
                     }
                 }
 
+                if run.status != .running && !denyViolations.isEmpty {
+                    buildProfileBanner(run: run)
+                }
+
                 violationSummary
             }
         }
@@ -127,6 +146,35 @@ struct RunDetailView: View {
         .padding(.vertical, 8)
         .frame(maxWidth: .infinity)
         .background(.bar)
+    }
+
+    private func buildProfileBanner(run: SandboxedRun) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "wand.and.stars")
+                .foregroundStyle(.blue)
+            VStack(alignment: .leading, spacing: 1) {
+                Text("Build a tighter profile")
+                    .font(.caption.bold())
+                Text("\(denyViolations.count) denied operations → auto-generate SBPL rules")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            Button("Build Profile") {
+                let name = "\(run.appDisplayName) – Tightened"
+                builtProfileName = name
+                builtProfileSBPL = SBPLGenerator.generateProfile(
+                    named: name,
+                    violations: run.violations
+                )
+                showingBuildProfile = true
+            }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.small)
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(Color.blue.opacity(0.07))
     }
 
     @ViewBuilder
