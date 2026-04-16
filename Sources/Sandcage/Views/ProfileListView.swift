@@ -82,7 +82,7 @@ struct ProfileRowView: View {
             .padding(.vertical, 2)
         } icon: {
             Image(systemName: icon)
-                .foregroundStyle(.accent)
+                .foregroundStyle(Color.accentColor)
         }
     }
 }
